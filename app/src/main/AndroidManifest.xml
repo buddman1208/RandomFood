@@ -16,6 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".NearFoodActivity" />
+        <activity android:name=".NearFoodMapActivity" />
+        <activity android:name=".UserSettingsActivity" />
+        <activity android:name=".FoodStackActivity" />
+        <activity android:name=".FoodStackSearchActivity"></activity>
     </application>
 
 </manifest>
