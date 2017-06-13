@@ -6,4 +6,5 @@
     <dimen name="margin_16dp">16dp</dimen>
     <dimen name="button_left_padding">25dp</dimen>
     <dimen name="button_top_padding">12dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
 </resources>
