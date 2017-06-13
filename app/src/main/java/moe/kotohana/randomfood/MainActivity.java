@@ -33,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
                         .putExtra("foodType", RandomHelper.Companion.getRandomNumber(6)));
             }
         });
+        binding.restaurantStack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), FoodStackActivity.class));
+            }
+        });
     }
 
     private void setCardViewClick() {
