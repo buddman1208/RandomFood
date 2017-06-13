@@ -84,7 +84,8 @@
 
                             <ImageView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_category_korean" />
 
                             <LinearLayout
@@ -138,6 +139,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_category_chinese" />
 
                             <LinearLayout
@@ -190,6 +192,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_category_boonsik" />
 
                             <LinearLayout
@@ -242,6 +245,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_category_chicken" />
 
                             <LinearLayout
@@ -294,6 +298,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_category_fastfood" />
 
                             <LinearLayout
@@ -326,7 +331,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_margin"
-                        android:layout_marginRight="@dimen/activity_margin"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="5dp"
                         app:cardPreventCornerOverlap="false"
@@ -347,6 +351,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_category_pizza" />
 
                             <LinearLayout
@@ -400,6 +405,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:src="@drawable/ic_category_japanese" />
 
                             <LinearLayout
