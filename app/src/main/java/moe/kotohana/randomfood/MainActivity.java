@@ -2,18 +2,13 @@ package moe.kotohana.randomfood;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
-import moe.kotohana.randomfood.R;
 import moe.kotohana.randomfood.databinding.ActivityMainBinding;
+import moe.kotohana.randomfood.utils.NetworkHelper;
+import moe.kotohana.randomfood.utils.RandomHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +24,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), UserSettingsActivity.class));
+            }
+        });
+        binding.selectRandom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), NearFoodActivity.class)
+                        .putExtra("foodType", RandomHelper.Companion.getRandomNumber(6)));
             }
         });
     }

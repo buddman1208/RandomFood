@@ -1,10 +1,14 @@
 package moe.kotohana.randomfood;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.github.nitrico.lastadapter.Holder;
@@ -46,6 +50,8 @@ public class NearFoodActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_near_food);
         setSupportActionBar(binding.toolbar);
+        binding.toolbar.setTitleTextColor(Color.WHITE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("이 주변의 " + typeList[getIntent().getIntExtra("foodType", 0)]);
         getPlace();
     }
@@ -58,6 +64,7 @@ public class NearFoodActivity extends AppCompatActivity {
     }
 
     private void initializeLayout() {
+        binding.nearRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         new LastAdapter(arrayList, BR.content)
                 .map(Place.class, new ItemType<ListItemBinding>(R.layout.list_item) {
                     @Override
@@ -78,5 +85,18 @@ public class NearFoodActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.near_food_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.map:
+                startActivity(new Intent(getApplicationContext(), NearFoodMapActivity.class)
+                        .putExtra("foodList", arrayList));
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
