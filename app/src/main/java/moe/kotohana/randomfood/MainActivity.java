@@ -7,8 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import moe.kotohana.randomfood.databinding.ActivityMainBinding;
-import moe.kotohana.randomfood.utils.NetworkHelper;
-import moe.kotohana.randomfood.utils.RandomHelper;
+import moe.kotohana.randomfood.utils.MathHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), NearFoodActivity.class)
-                        .putExtra("foodType", RandomHelper.Companion.getRandomNumber(6)));
+                        .putExtra("foodType", MathHelper.Companion.getRandomNumber(6)));
             }
         });
         binding.restaurantStack.setOnClickListener(new View.OnClickListener() {
