@@ -18,9 +18,8 @@ class MathHelper {
         }
 
         fun calculatePercent(vararg items: Int): ArrayList<Float> {
-            val total: Int = items.sum()
             val array: ArrayList<Float> = ArrayList()
-            items.mapTo(array) { ((it.toFloat() / total) * 100)}
+            items.mapTo(array) { ((it.toFloat() / items.sum()) * 100)}
             return array
         }
     }
