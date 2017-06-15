@@ -6,4 +6,12 @@
     <color name="colorAccent">#FF4081</color>
     <color name="textColor">#BDBDBD</color>
     <color name="textColorDark">#646464</color>
+
+    <color name="boonsikColor">#ff6e6e</color>
+    <color name="chickenColor">#ffe082</color>
+    <color name="chineseColor">#a1887f</color>
+    <color name="fastfoodColor">#f9a825</color>
+    <color name="japaneseColor">#f48fb1</color>
+    <color name="koreanColor">#9ccc65</color>
+    <color name="pizzaColor">#b39ddb</color>
 </resources>

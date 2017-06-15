@@ -21,6 +21,11 @@ public class UserSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_user_settings);
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        binding.toolbar.setTitleTextColor(Color.WHITE);
+        binding.toolbar.setContentInsetStartWithNavigation(0);
+        getSupportActionBar().setTitle("유저 정보");
         setData();
         binding.developerInfo.setOnClickListener(new View.OnClickListener() {
             @Override
