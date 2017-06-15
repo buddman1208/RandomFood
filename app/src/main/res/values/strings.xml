@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RandomFood</string>
+    <string name="naver_client_id">yQwvCnEirmlpHCICpzIU</string>
+    <string name="naver_client_secret_id">CS8vIALW9F</string>
 </resources>
