@@ -3,9 +3,7 @@ package moe.kotohana.randomfood.models
 /**
  * Created by Junseok Oh on 2017-06-15.
  */
-class Location(var location: LocationDetail) {
-    fun getRequiredAddress(): String {
-        return location.sigugun + " " + location.dongmyun
-    }
-}
-open class LocationDetail(var country: String, var sido: String, var sigugun: String, var dongmyun: String)
+open class Location(var result : LocationDetails)
+open class LocationDetails(var items: ArrayList<Items>)
+open class Items(var addrdetail : AddrDetail)
+open class AddrDetail(var country: String, var sido: String, var sigugun: String, var dongmyun: String)

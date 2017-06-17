@@ -2,6 +2,9 @@ package moe.kotohana.randomfood.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -11,16 +14,22 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class NetworkHelper(private val context: Context) {
     companion object {
-        val url = "http://hangeulro.iwin247.kr"
-        val port = 80
+        val url = "https://openapi.naver.com/"
 
         var retrofit: Retrofit? = null
 
+        val networkClient = OkHttpClient.Builder()
         val networkInstance: NetworkAPI
             get() {
+                networkClient.addInterceptor { chain ->
+                    chain.proceed(chain.request().newBuilder()
+                            .header("X-Naver-Client-Id", "yQwvCnEirmlpHCICpzIU")
+                            .header("X-Naver-Client-Secret", "CS8vIALW9F").build())
+                }
                 if (retrofit == null) {
                     retrofit = Retrofit.Builder()
-                            .baseUrl(url + ":" + port)
+                            .baseUrl(url)
+                            .client(networkClient.build())
                             .addConverterFactory(GsonConverterFactory.create())
                             .build()
                 }

@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -15,13 +16,28 @@ import android.widget.Toast;
 import com.github.nitrico.lastadapter.Holder;
 import com.github.nitrico.lastadapter.ItemType;
 import com.github.nitrico.lastadapter.LastAdapter;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import moe.kotohana.randomfood.databinding.ActivityNearFoodBinding;
 import moe.kotohana.randomfood.databinding.ListItemBinding;
+import moe.kotohana.randomfood.models.Location;
 import moe.kotohana.randomfood.models.Place;
 import moe.kotohana.randomfood.utils.GPSService;
+import moe.kotohana.randomfood.utils.NetworkHelper;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class NearFoodActivity extends AppCompatActivity {
 
@@ -36,7 +52,6 @@ public class NearFoodActivity extends AppCompatActivity {
     * */
 
     ActivityNearFoodBinding binding;
-    private LocationManager locationManager;
     private ArrayList<Place> arrayList = new ArrayList<>();
     private String[] typeList = new String[]{
             "한식",
@@ -64,7 +79,17 @@ public class NearFoodActivity extends AppCompatActivity {
         if (service.canGetLocation()) {
             double latitude = service.getLatitude();
             double longitude = service.getLongitude();
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+            NetworkHelper.Companion.getNetworkInstance().getAddressByGeocode(longitude + "," + latitude).enqueue(new Callback<Location>() {
+                @Override
+                public void onResponse(Call<Location> call, Response<Location> response) {
+                }
+
+                @Override
+                public void onFailure(Call<Location> call, Throwable t) {
+                    Log.e("asdf", "onfailure  : " + t.getLocalizedMessage());
+
+                }
+            });
         } else {
             service.showSettingsAlert();
         }
