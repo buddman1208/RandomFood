@@ -12,7 +12,7 @@
 
         <variable
             name="content"
-            type="moe.kotohana.randomfood.models.Place" />
+            type="moe.kotohana.randomfood.models.Restaurant" />
     </data>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{content.name}"
+                android:text="@{content.realTitle}"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="asdf"
+                android:text="@{content.roadAddress}"
                 android:textColor="@color/textColor"
                 android:textSize="13sp" />
         </LinearLayout>
