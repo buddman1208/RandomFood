@@ -79,6 +79,7 @@ public class NearFoodActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         type = getIntent().getIntExtra("foodType", 0);
         binding.toolbar.setTitleTextColor(Color.WHITE);
+        binding.toolbar.setSubtitleTextColor(Color.WHITE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("이 주변의 " + typeList[type]);
         getPlace();
@@ -95,7 +96,12 @@ public class NearFoodActivity extends AppCompatActivity {
                     switch (response.code()) {
                         case 200:
                             Items items = response.body().getResult().getItems().get(0);
-                            NetworkHelper.Companion.getNetworkInstance().getRestaurant(items.getAddrdetail().getSigugun() + " " + items.getAddrdetail().getDongmyun() + " " + typeQueryList[type]).enqueue(new Callback<Place>() {
+                            getSupportActionBar().setSubtitle(
+                                            items.getAddrdetail().getSido() + " " +
+                                            items.getAddrdetail().getSigugun() + " " +
+                                            items.getAddrdetail().getDongmyun()
+                            );
+                            NetworkHelper.Companion.getNetworkInstance().getRestaurant(items.getAddrdetail().getSigugun() + " " + items.getAddrdetail().getDongmyun() + " " + typeQueryList[type], 100).enqueue(new Callback<Place>() {
                                 @Override
                                 public void onResponse(Call<Place> call, Response<Place> response) {
                                     switch (response.code()) {

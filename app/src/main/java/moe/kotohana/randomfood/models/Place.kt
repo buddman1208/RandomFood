@@ -36,4 +36,8 @@ class Restaurant {
         return title.replace("<b>", "").replace("</b>", "").replace("&amp;", "")
     }
 
+    fun getRealAddress() : String{
+        return if (roadAddress.isNotEmpty()) roadAddress else address
+    }
+
 }

@@ -17,5 +17,5 @@ interface NetworkAPI {
     fun getAddressByGeocode(@Query("query") query: String): Call<Location>
 
     @GET("v1/search/local.json")
-    fun getRestaurant(@Query("query") query : String): Call<Place>
+    fun getRestaurant(@Query("query") query: String, @Query("display") display: Int): Call<Place>
 }
