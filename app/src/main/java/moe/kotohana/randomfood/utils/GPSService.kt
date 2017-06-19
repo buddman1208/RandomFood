@@ -103,15 +103,15 @@ class GPSService(val mContext: Context) : Service(), LocationListener {
      */
     fun showSettingsAlert(activity: Activity) {
         val alertDialog = AlertDialog.Builder(mContext)
-        alertDialog.setTitle("GPS is settings")
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?")
-        alertDialog.setPositiveButton("Settings") { _, _ ->
+        alertDialog.setTitle("GPS가 활성화되지 않았습니다.")
+        alertDialog.setMessage("설정으로 이동하여 GPS를 허용하시겠습니까?")
+        alertDialog.setPositiveButton("설정으로 이동") { _, _ ->
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             mContext.startActivity(intent)
             activity.finish()
         }
 
-        alertDialog.setNegativeButton("Cancel") { dialog, _ ->
+        alertDialog.setNegativeButton("취소") { dialog, _ ->
             run {
                 dialog.cancel()
                 activity.finish()
