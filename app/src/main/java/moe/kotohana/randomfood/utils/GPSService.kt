@@ -1,5 +1,6 @@
 package moe.kotohana.randomfood.utils
 
+import android.app.Activity
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -37,6 +38,7 @@ class GPSService(val mContext: Context) : Service(), LocationListener {
 
     fun getLocation(): Location? {
         if (locationManager != null) {
+            locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
@@ -56,15 +58,17 @@ class GPSService(val mContext: Context) : Service(), LocationListener {
                 }
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
-                    locationManager.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this)
-                    Log.d("GPS Enabled", "GPS Enabled")
-                    location = locationManager
-                            .getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                    latitude = location.latitude
-                    longitude = location.longitude
+                    if (location == null) {
+                        locationManager.requestLocationUpdates(
+                                LocationManager.GPS_PROVIDER,
+                                MIN_TIME_BW_UPDATES,
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this)
+                        Log.d("GPS Enabled", "GPS Enabled")
+                        location = locationManager
+                                .getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                        latitude = location.latitude
+                        longitude = location.longitude
+                    }
                 }
             }
             return location
@@ -97,16 +101,22 @@ class GPSService(val mContext: Context) : Service(), LocationListener {
     /**
      * Function to show settings alert dialog
      */
-    fun showSettingsAlert() {
+    fun showSettingsAlert(activity: Activity) {
         val alertDialog = AlertDialog.Builder(mContext)
         alertDialog.setTitle("GPS is settings")
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?")
         alertDialog.setPositiveButton("Settings") { _, _ ->
             val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             mContext.startActivity(intent)
+            activity.finish()
         }
 
-        alertDialog.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+        alertDialog.setNegativeButton("Cancel") { dialog, _ ->
+            run {
+                dialog.cancel()
+                activity.finish()
+            }
+        }
 
         alertDialog.show()
     }

@@ -43,6 +43,7 @@ dependencies {
     compile 'com.github.IntruderShanky:scatter-piechart:1.0.0'
     compile 'com.naver.maps.open:naver-map-api:2.1.2@aar'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
+    compile 'gun0912.ted:tedpermission:1.0.3'
 
 }
 repositories {
