@@ -41,6 +41,8 @@ public class NearFoodActivity extends AppCompatActivity {
     * 피자 5
     * 일식 6
     * */
+    boolean isLoaded = false;
+    LastAdapter adapter;
     int type = 0;
     GPSService service;
     ActivityNearFoodBinding binding;
@@ -73,26 +75,30 @@ public class NearFoodActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_near_food);
+        setSupportActionBar(binding.toolbar);
+        type = getIntent().getIntExtra("foodType", 0);
+        binding.toolbar.setTitleTextColor(Color.WHITE);
+        binding.toolbar.setSubtitleTextColor(Color.WHITE);
+        binding.nearRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("이 주변의 " + typeList[type]);
 
+
+        getPlace();
+    }
+
+    private void getPlace() {
         progressDialog = new MaterialDialog.Builder(this)
                 .title("데이터를 로드하는 중입니다")
                 .progress(true, 0)
                 .content("잠시만 기다려주세요.")
                 .cancelable(false)
                 .show();
-        setSupportActionBar(binding.toolbar);
-        type = getIntent().getIntExtra("foodType", 0);
-        binding.toolbar.setTitleTextColor(Color.WHITE);
-        binding.toolbar.setSubtitleTextColor(Color.WHITE);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("이 주변의 " + typeList[type]);
-        getPlace();
-    }
-
-    private void getPlace() {
         service = new GPSService(this);
         android.location.Location location = service.getLocation();
         if (location != null) {
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
             NetworkHelper.Companion.getNetworkInstance().getAddressByGeocode(longitude + "," + latitude).enqueue(new Callback<Location>() {
                 @Override
                 public void onResponse(Call<Location> call, Response<Location> response) {
@@ -110,7 +116,7 @@ public class NearFoodActivity extends AppCompatActivity {
                                     switch (response.code()) {
                                         case 200:
                                             arrayList = response.body().getItems();
-                                            initializeLayout();
+                                            initializeLayout(isLoaded);
                                             break;
                                         default:
                                             Log.e("getRestaurant", "onResponse : " + response.code() + "");
@@ -140,22 +146,27 @@ public class NearFoodActivity extends AppCompatActivity {
                 }
             });
         } else {
-            service.showSettingsAlert();
+            service.showSettingsAlert(this);
         }
     }
 
-    private void initializeLayout() {
-        binding.nearRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        new LastAdapter(arrayList, BR.content)
-                .map(Restaurant.class, new ItemType<ListItemBinding>(R.layout.list_item) {
-                    @Override
-                    public void onBind(Holder<ListItemBinding> holder) {
-                        super.onBind(holder);
-                        holder.getBinding().setActivity(NearFoodActivity.this);
-                        holder.getBinding().setPosition(holder.getLayoutPosition());
-                    }
-                })
-                .into(binding.nearRecyclerView);
+    private void initializeLayout(boolean isLoadedOnce) {
+        if (!isLoadedOnce) {
+            adapter = new LastAdapter(arrayList, BR.content)
+                    .map(Restaurant.class, new ItemType<ListItemBinding>(R.layout.list_item) {
+                        @Override
+                        public void onBind(Holder<ListItemBinding> holder) {
+                            super.onBind(holder);
+                            holder.getBinding().setActivity(NearFoodActivity.this);
+                            holder.getBinding().setPosition(holder.getLayoutPosition());
+                        }
+                    })
+                    .into(binding.nearRecyclerView);
+            isLoaded = true;
+
+        } else {
+            adapter.notifyDataSetChanged();
+        }
         progressDialog.dismiss();
     }
 
@@ -185,5 +196,13 @@ public class NearFoodActivity extends AppCompatActivity {
                         .putExtra("foodList", arrayList));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isLoaded) {
+            getPlace();
+        }
     }
 }
