@@ -110,7 +110,7 @@ public class NearFoodActivity extends AppCompatActivity {
                                             items.getAddrdetail().getSigugun() + " " +
                                             items.getAddrdetail().getDongmyun()
                             );
-                            NetworkHelper.Companion.getNetworkInstance().getRestaurant(items.getAddrdetail().getSigugun() + " " + items.getAddrdetail().getDongmyun() + " " + typeQueryList[type], 100).enqueue(new Callback<Place>() {
+                            NetworkHelper.Companion.getNetworkInstance().getRestaurant(items.getAddrdetail().getSigugun() + " " + items.getAddrdetail().getDongmyun() + " " + typeQueryList[type], 20).enqueue(new Callback<Place>() {
                                 @Override
                                 public void onResponse(Call<Place> call, Response<Place> response) {
                                     switch (response.code()) {
