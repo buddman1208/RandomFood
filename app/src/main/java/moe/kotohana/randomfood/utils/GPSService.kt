@@ -29,29 +29,19 @@ class GPSService(val mContext: Context) : Service(), LocationListener {
     lateinit internal var location: Location // location
     internal var latitude: Double = 0.toDouble() // latitude
     internal var longitude: Double = 0.toDouble() // longitude
-
-    // Declaring a Location Manager
-    lateinit var locationManager: LocationManager
+    var locationManager: LocationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     init {
         getLocation()
     }
 
-    fun getLocation(): Location {
-        try {
-            locationManager = mContext
-                    .getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    fun getLocation(): Location? {
+        if (locationManager != null) {
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
-            // getting GPS status
-            isGPSEnabled = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER)
-
-            // getting network status
-            isNetworkEnabled = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-            if (!isGPSEnabled && !isNetworkEnabled) {
-                // no network provider is enabled
+            if (!isGPSEnabled || !isNetworkEnabled) {
+                return null
             } else {
                 this.canGetLocation = true
                 // First get location from Network Provider
@@ -60,9 +50,7 @@ class GPSService(val mContext: Context) : Service(), LocationListener {
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
                             MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), this)
-                    Log.d("Network", "Network")
-                    location = locationManager
-                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
                     latitude = location.latitude
                     longitude = location.longitude
                 }
@@ -79,12 +67,12 @@ class GPSService(val mContext: Context) : Service(), LocationListener {
                     longitude = location.longitude
                 }
             }
+            return location
 
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } else {
+            Log.e("asdf", "No LocationManger Provided")
+            return null
         }
-
-        return location
     }
 
     fun getLatitude(): Double {

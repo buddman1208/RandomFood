@@ -65,6 +65,10 @@ public class NearFoodActivity extends AppCompatActivity {
             "일식 음식점"
     };
 
+
+    double latitude;
+    double longitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,9 +91,8 @@ public class NearFoodActivity extends AppCompatActivity {
 
     private void getPlace() {
         service = new GPSService(this);
-        if (service.canGetLocation()) {
-            double latitude = service.getLatitude();
-            double longitude = service.getLongitude();
+        android.location.Location location = service.getLocation();
+        if (location != null) {
             NetworkHelper.Companion.getNetworkInstance().getAddressByGeocode(longitude + "," + latitude).enqueue(new Callback<Location>() {
                 @Override
                 public void onResponse(Call<Location> call, Response<Location> response) {
@@ -97,7 +100,7 @@ public class NearFoodActivity extends AppCompatActivity {
                         case 200:
                             Items items = response.body().getResult().getItems().get(0);
                             getSupportActionBar().setSubtitle(
-                                            items.getAddrdetail().getSido() + " " +
+                                    items.getAddrdetail().getSido() + " " +
                                             items.getAddrdetail().getSigugun() + " " +
                                             items.getAddrdetail().getDongmyun()
                             );
