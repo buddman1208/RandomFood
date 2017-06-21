@@ -9,7 +9,7 @@ import java.io.Serializable
 
 open class Place(val items: ArrayList<Restaurant>) : Serializable
 
-class Restaurant {
+class Restaurant : Serializable {
     var title: String = ""
     var link: String = ""
     var category: String = ""
@@ -32,11 +32,11 @@ class Restaurant {
         this.mapy = mapy
     }
 
-    fun getRealTitle() : String {
+    fun getRealTitle(): String {
         return title.replace("<b>", "").replace("</b>", "").replace("&amp;", "")
     }
 
-    fun getRealAddress() : String{
+    fun getRealAddress(): String {
         return if (roadAddress.isNotEmpty()) roadAddress else address
     }
 
