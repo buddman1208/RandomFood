@@ -176,8 +176,10 @@ public class NearFoodActivity extends AppCompatActivity {
     }
 
     public void onListClick(int position) {
+        ArrayList<Restaurant> tempArr = new ArrayList<>();
+        tempArr.add(arrayList.get(position));
         startActivity(new Intent(getApplicationContext(), NearFoodMapActivity.class)
-        .putExtra("Restaurant", arrayList.get(position)));
+                .putExtra("restaurants", tempArr));
     }
 
     @Override
@@ -194,7 +196,7 @@ public class NearFoodActivity extends AppCompatActivity {
                 break;
             case R.id.map:
                 startActivity(new Intent(getApplicationContext(), NearFoodMapActivity.class)
-                        .putExtra("RestaurantList", arrayList));
+                        .putExtra("restaurants", arrayList));
         }
         return super.onOptionsItemSelected(item);
     }

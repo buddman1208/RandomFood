@@ -14,4 +14,8 @@
     <color name="japaneseColor">#f48fb1</color>
     <color name="koreanColor">#9ccc65</color>
     <color name="pizzaColor">#b39ddb</color>
+
+    <drawable name="black_color">#ff000000</drawable>
+    <drawable name="selected_list_color">#ff32A800</drawable>
+    <drawable name="default_list_color">#ffffffff</drawable>
 </resources>
