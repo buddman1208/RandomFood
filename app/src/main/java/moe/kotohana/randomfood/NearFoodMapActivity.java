@@ -3,11 +3,14 @@ package moe.kotohana.randomfood;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -55,7 +58,7 @@ public class NearFoodMapActivity extends AppCompatActivity {
     public NMapPOIdataOverlay mFloatingPOIdataOverlay;
     public NMapPOIitem mFloatingPOIitem;
     private NMapViewerResourceProvider mMapViewerResourceProvider;
-
+    ArrayList<? extends Restaurant> arrayList;
     public Intent intent;
 
     @Override
@@ -63,7 +66,9 @@ public class NearFoodMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_near_food_map);
         setSupportActionBar(binding.toolbar);
-
+        binding.toolbar.setTitleTextColor(Color.WHITE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getIntent().getStringExtra("toolbar"));
         nMapContext = new NMapContext(this);
         nMapContext.onCreate();
         setDefault();
@@ -99,21 +104,66 @@ public class NearFoodMapActivity extends AppCompatActivity {
         setGeoPoint();
     }
 
-    private void setGeoPoint() {
-        ArrayList<? extends Restaurant> arrayList = intent.getParcelableArrayListExtra("restaurants");
+    public int findPositionInArrayList(String query) {
+        for (int i = 0; i < arrayList.size(); i++) {
+            if (arrayList.get(i).getRealTitle().equals(query)) return i;
+        }
+        return -1;
+    }
 
-        GeoTransPoint oGeo = GeoTrans.convert(GeoTrans.KATEC, GeoTrans.GEO, new GeoTransPoint(Double.parseDouble(arrayList.get(0).getMapx()), Double.parseDouble(arrayList.get(0).getMapy())));
-        mMapController.setMapCenter(new NGeoPoint(oGeo.getX(), oGeo.getY()));
-        // Markers for POI item
+    private void setGeoPoint() {
+        arrayList = intent.getParcelableArrayListExtra("restaurants");
         int markerId = NMapPOIflagType.PIN;
-        NMapPOIdata poiData = new NMapPOIdata(2, mMapViewerResourceProvider);
-        poiData.beginPOIdata(2);
-        NMapPOIitem item = poiData.addPOIitem(oGeo.getX(), oGeo.getY(), arrayList.get(0).getTitle(), markerId, 0);
-        item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
-        poiData.endPOIdata();
-        NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
-        poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
-        poiDataOverlay.selectPOIitem(0, true);
+
+        if (arrayList.size() == 1) {
+            setUI(arrayList.get(0));
+            setMode(false);
+            GeoTransPoint oGeo = GeoTrans.convert(GeoTrans.KATEC, GeoTrans.GEO, new GeoTransPoint(Double.parseDouble(arrayList.get(0).getMapx()), Double.parseDouble(arrayList.get(0).getMapy())));
+            mMapController.setMapCenter(new NGeoPoint(oGeo.getX(), oGeo.getY()));
+            NMapPOIdata poiData = new NMapPOIdata(2, mMapViewerResourceProvider);
+            poiData.beginPOIdata(2);
+            NMapPOIitem item = poiData.addPOIitem(oGeo.getX(), oGeo.getY(), arrayList.get(0).getRealTitle(), markerId, 0);
+            item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
+            poiData.endPOIdata();
+            NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
+            poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
+            poiDataOverlay.selectPOIitem(0, true);
+        } else {
+            setMode(true);
+            NMapPOIdata poiData = new NMapPOIdata(arrayList.size(), mMapViewerResourceProvider);
+            poiData.beginPOIdata(arrayList.size());
+            for (int i = 0; i < arrayList.size(); i++) {
+                GeoTransPoint oGeo = GeoTrans.convert(GeoTrans.KATEC, GeoTrans.GEO, new GeoTransPoint(Double.parseDouble(arrayList.get(i).getMapx()), Double.parseDouble(arrayList.get(i).getMapy())));
+                poiData.addPOIitem(oGeo.getX(), oGeo.getY(), arrayList.get(i).getRealTitle(), markerId, 0);
+
+            }
+            poiData.endPOIdata();
+            NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
+            poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
+            poiDataOverlay.showAllPOIdata(11);
+        }
+    }
+
+    private void setMode(boolean isMultiMode) {
+        binding.container.setVisibility((isMultiMode) ? View.GONE : View.VISIBLE);
+    }
+
+    private void setUI(final Restaurant restaurant) {
+        binding.container.setVisibility(View.VISIBLE);
+        binding.resTitle.setText(restaurant.getRealTitle());
+        binding.resPhone.setText(
+                (restaurant.getTelephone().trim().equals("")) ? "번호 정보가 없습니다" : restaurant.getTelephone()
+        );
+        binding.resPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (restaurant.getTelephone().trim().equals(""))
+                    return;
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + restaurant.getTelephone()));
+                startActivity(intent);
+            }
+        });
+        binding.resAddress.setText(restaurant.getRealAddress());
     }
 
     /* POI data State Change Listener*/
@@ -121,6 +171,8 @@ public class NearFoodMapActivity extends AppCompatActivity {
 
         @Override
         public void onCalloutClick(NMapPOIdataOverlay poiDataOverlay, NMapPOIitem item) {
+            setUI(arrayList.get(findPositionInArrayList(item.getTitle())));
+
         }
 
         @Override
@@ -133,14 +185,11 @@ public class NearFoodMapActivity extends AppCompatActivity {
         public View onCreateCalloutOverlayView(NMapOverlay itemOverlay, NMapOverlayItem overlayItem, Rect itemBounds) {
 
             if (overlayItem != null) {
-                // [TEST] 말풍선 오버레이를 뷰로 설정함
                 String title = overlayItem.getTitle();
                 if (title != null && title.length() > 5) {
                     return new NMapCalloutCustomOverlayView(NearFoodMapActivity.this, itemOverlay, overlayItem, itemBounds);
                 }
             }
-
-            // null을 반환하면 말풍선 오버레이를 표시하지 않음
             return null;
         }
 
@@ -151,9 +200,10 @@ public class NearFoodMapActivity extends AppCompatActivity {
         public NMapCalloutOverlay onCreateCalloutOverlay(NMapOverlay itemOverlay, NMapOverlayItem overlayItem,
                                                          Rect itemBounds) {
 
+            Log.e("asdf", "onCreateCalloutOverlay");
             // handle overlapped items
             if (itemOverlay instanceof NMapPOIdataOverlay) {
-                NMapPOIdataOverlay poiDataOverlay = (NMapPOIdataOverlay)itemOverlay;
+                NMapPOIdataOverlay poiDataOverlay = (NMapPOIdataOverlay) itemOverlay;
 
                 // check if it is selected by touch event
                 if (!poiDataOverlay.isFocusedBySelectItem()) {
@@ -174,17 +224,12 @@ public class NearFoodMapActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (countOfOverlappedItems > 1) {
-                        String text = countOfOverlappedItems + " overlapped items for " + overlayItem.getTitle();
-                        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-                        return null;
-                    }
+
                 }
             }
 
-            // use custom old callout overlay
             if (overlayItem instanceof NMapPOIitem) {
-                NMapPOIitem poiItem = (NMapPOIitem)overlayItem;
+                NMapPOIitem poiItem = (NMapPOIitem) overlayItem;
 
                 if (poiItem.showRightButton()) {
                     return new NMapCalloutCustomOldOverlay(itemOverlay, overlayItem, itemBounds,
@@ -192,11 +237,8 @@ public class NearFoodMapActivity extends AppCompatActivity {
                 }
             }
 
-            // use custom callout overlay
             return new NMapCalloutCustomOverlay(itemOverlay, overlayItem, itemBounds, mMapViewerResourceProvider);
 
-            // set basic callout overlay
-            //return new NMapCalloutBasicOverlay(itemOverlay, overlayItem, itemBounds);
         }
 
     };
@@ -273,10 +315,17 @@ public class NearFoodMapActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
-        // save map view state such as map center position and zoom level.
-//        saveInstanceState();
-
         nMapContext.onDestroy();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onContextItemSelected(item);
     }
 }
