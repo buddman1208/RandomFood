@@ -47,7 +47,7 @@ public class Restaurant extends RealmObject implements Serializable {
         return category;
     }
     public String getRealDescription(){
-        return category + " " + getAddress();
+        return category + ", " + getAddress();
     }
 
     public void setCategory(String category) {
