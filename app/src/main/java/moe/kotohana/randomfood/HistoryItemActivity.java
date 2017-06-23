@@ -41,6 +41,7 @@ public class HistoryItemActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setTitleTextColor(Color.WHITE);
         getSupportActionBar().setTitle("최근 기록 보기");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         RealmList<Restaurant> restaurants = realm.where(History.class).findAll().get(0).getHistoryList();
