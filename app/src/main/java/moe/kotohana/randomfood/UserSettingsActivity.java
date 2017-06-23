@@ -3,6 +3,7 @@ package moe.kotohana.randomfood;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,7 +45,7 @@ public class UserSettingsActivity extends AppCompatActivity {
         binding.developerInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                startActivity();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/kotohana5706")));
             }
         });
         binding.showHistory.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +90,7 @@ public class UserSettingsActivity extends AppCompatActivity {
                         data.where().equalTo("type", 6).findAll().size()
                 );
                 Collections.addAll(arrayList,
-                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(0))), Color.WHITE,  ContextCompat.getColor(this, R.color.koreanColor)),
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(0))), Color.WHITE, ContextCompat.getColor(this, R.color.koreanColor)),
                         new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(1))), Color.WHITE, ContextCompat.getColor(this, R.color.chineseColor)),
                         new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(2))), Color.WHITE, ContextCompat.getColor(this, R.color.boonsikColor)),
                         new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(3))), Color.WHITE, ContextCompat.getColor(this, R.color.chickenColor)),

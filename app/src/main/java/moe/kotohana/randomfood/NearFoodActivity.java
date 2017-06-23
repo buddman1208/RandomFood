@@ -200,7 +200,10 @@ public class NearFoodActivity extends AppCompatActivity {
         if (history.size() == 0) {
             History data = realm.createObject(History.class);
             RealmList<Restaurant> list = new RealmList<>();
-            list.add(arrayList.get(position).setRealType(type));
+            if (list.isManaged())
+                list.add(arrayList.get(position).setRealType(type));
+            else
+                list.add(realm.copyToRealm(arrayList.get(position).setRealType(type)));
             data.setHistoryList(list);
         } else {
             history.get(0).getHistoryList().add(arrayList.get(position).setRealType(type));
