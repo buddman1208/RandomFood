@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{content.realTitle}"
+                android:text="@{content.title}"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{content.realAddress}"
+                android:text="@{content.address}"
                 android:textColor="@color/textColor"
                 android:textSize="13sp" />
         </LinearLayout>

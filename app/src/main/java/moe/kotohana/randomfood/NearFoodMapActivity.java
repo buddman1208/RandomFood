@@ -51,9 +51,6 @@ public class NearFoodMapActivity extends AppCompatActivity {
     public NMapView mMapView;
     public NMapController mMapController;
     public NMapOverlayManager mOverlayManager;
-    public NMapMyLocationOverlay mMyLocationOverlay;
-    public NMapLocationManager mMapLocationManager;
-    public NMapCompassManager mMapCompassManager;
     private NMapViewerResourceProvider mMapViewerResourceProvider;
     ArrayList<? extends Restaurant> arrayList;
     public Intent intent;
@@ -103,7 +100,7 @@ public class NearFoodMapActivity extends AppCompatActivity {
 
     public int findPositionInArrayList(String query) {
         for (int i = 0; i < arrayList.size(); i++) {
-            if (arrayList.get(i).getRealTitle().equals(query)) return i;
+            if (arrayList.get(i).getTitle().equals(query)) return i;
         }
         return -1;
     }
@@ -119,7 +116,7 @@ public class NearFoodMapActivity extends AppCompatActivity {
             mMapController.setMapCenter(new NGeoPoint(oGeo.getX(), oGeo.getY()));
             NMapPOIdata poiData = new NMapPOIdata(2, mMapViewerResourceProvider);
             poiData.beginPOIdata(2);
-            NMapPOIitem item = poiData.addPOIitem(oGeo.getX(), oGeo.getY(), arrayList.get(0).getRealTitle(), markerId, 0);
+            NMapPOIitem item = poiData.addPOIitem(oGeo.getX(), oGeo.getY(), arrayList.get(0).getTitle(), markerId, 0);
             item.setRightAccessory(true, NMapPOIflagType.CLICKABLE_ARROW);
             poiData.endPOIdata();
             NMapPOIdataOverlay poiDataOverlay = mOverlayManager.createPOIdataOverlay(poiData, null);
@@ -131,7 +128,7 @@ public class NearFoodMapActivity extends AppCompatActivity {
             poiData.beginPOIdata(arrayList.size());
             for (int i = 0; i < arrayList.size(); i++) {
                 GeoTransPoint oGeo = GeoTrans.convert(GeoTrans.KATEC, GeoTrans.GEO, new GeoTransPoint(Double.parseDouble(arrayList.get(i).getMapx()), Double.parseDouble(arrayList.get(i).getMapy())));
-                poiData.addPOIitem(oGeo.getX(), oGeo.getY(), arrayList.get(i).getRealTitle(), markerId, 0);
+                poiData.addPOIitem(oGeo.getX(), oGeo.getY(), arrayList.get(i).getTitle(), markerId, 0);
 
             }
             poiData.endPOIdata();
@@ -147,7 +144,7 @@ public class NearFoodMapActivity extends AppCompatActivity {
 
     private void setUI(final Restaurant restaurant) {
         binding.container.setVisibility(View.VISIBLE);
-        binding.resTitle.setText(restaurant.getRealTitle());
+        binding.resTitle.setText(restaurant.getTitle());
         binding.resPhone.setText(
                 (restaurant.getTelephone().trim().equals("")) ? "번호 정보가 없습니다" : restaurant.getTelephone()
         );
@@ -160,7 +157,7 @@ public class NearFoodMapActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        binding.resAddress.setText(restaurant.getRealAddress());
+        binding.resAddress.setText(restaurant.getAddress());
     }
 
     /* POI data State Change Listener*/

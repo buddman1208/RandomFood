@@ -12,11 +12,18 @@ import com.intrusoft.scatter.ChartData;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
 import moe.kotohana.randomfood.databinding.ActivityUserSettingsBinding;
+import moe.kotohana.randomfood.models.History;
+import moe.kotohana.randomfood.models.Restaurant;
 import moe.kotohana.randomfood.utils.MathHelper;
 
 public class UserSettingsActivity extends AppCompatActivity {
 
+    Realm realm;
     ActivityUserSettingsBinding binding;
     ArrayList<ChartData> arrayList = new ArrayList<>();
 
@@ -45,18 +52,39 @@ public class UserSettingsActivity extends AppCompatActivity {
     }
 
     private void setData() {
-
-        ArrayList<Float> percents = MathHelper.Companion.calculatePercent(30, 20, 40, 50, 60, 70, 20);
-        Collections.addAll(arrayList,
-                new ChartData("", percents.get(0), Color.WHITE, ContextCompat.getColor(this, R.color.koreanColor)),
-                new ChartData("", percents.get(1), Color.WHITE, ContextCompat.getColor(this, R.color.chineseColor)),
-                new ChartData("", percents.get(2), Color.WHITE, ContextCompat.getColor(this, R.color.boonsikColor)),
-                new ChartData("", percents.get(3), Color.WHITE, ContextCompat.getColor(this, R.color.chickenColor)),
-                new ChartData("", percents.get(4), Color.WHITE, ContextCompat.getColor(this, R.color.fastfoodColor)),
-                new ChartData("", percents.get(5), Color.WHITE, ContextCompat.getColor(this, R.color.pizzaColor)),
-                new ChartData("", percents.get(6), Color.WHITE, ContextCompat.getColor(this, R.color.japaneseColor))
-        );
-        binding.chart.setCenterCircleColor(Color.parseColor("#8fFFFFFF"));
-        binding.chart.setChartData(arrayList);
+        realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<History> history = realm.where(History.class).findAll();
+        if (history.size() == 0) {
+            binding.errorText.setVisibility(View.VISIBLE);
+            binding.chart.setVisibility(View.INVISIBLE);
+            History data = realm.createObject(History.class);
+            data.setHistoryList(new RealmList<Restaurant>());
+        } else {
+            binding.errorText.setVisibility(View.INVISIBLE);
+            binding.chart.setVisibility(View.VISIBLE);
+            RealmList<Restaurant> data = history.get(0).getHistoryList();
+            ArrayList<Float> percents = MathHelper.Companion.calculatePercent(
+                    data.where().equalTo("type", 0).findAll().size(),
+                    data.where().equalTo("type", 1).findAll().size(),
+                    data.where().equalTo("type", 2).findAll().size(),
+                    data.where().equalTo("type", 3).findAll().size(),
+                    data.where().equalTo("type", 4).findAll().size(),
+                    data.where().equalTo("type", 5).findAll().size(),
+                    data.where().equalTo("type", 6).findAll().size()
+            );
+            Collections.addAll(arrayList,
+                    new ChartData("", percents.get(0), Color.WHITE, ContextCompat.getColor(this, R.color.koreanColor)),
+                    new ChartData("", percents.get(1), Color.WHITE, ContextCompat.getColor(this, R.color.chineseColor)),
+                    new ChartData("", percents.get(2), Color.WHITE, ContextCompat.getColor(this, R.color.boonsikColor)),
+                    new ChartData("", percents.get(3), Color.WHITE, ContextCompat.getColor(this, R.color.chickenColor)),
+                    new ChartData("", percents.get(4), Color.WHITE, ContextCompat.getColor(this, R.color.fastfoodColor)),
+                    new ChartData("", percents.get(5), Color.WHITE, ContextCompat.getColor(this, R.color.pizzaColor)),
+                    new ChartData("", percents.get(6), Color.WHITE, ContextCompat.getColor(this, R.color.japaneseColor))
+            );
+            binding.chart.setCenterCircleColor(Color.parseColor("#8fFFFFFF"));
+            binding.chart.setChartData(arrayList);
+        }
+        realm.commitTransaction();
     }
 }

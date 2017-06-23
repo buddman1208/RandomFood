@@ -18,8 +18,12 @@ import com.github.nitrico.lastadapter.LastAdapter;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 import moe.kotohana.randomfood.databinding.ActivityNearFoodBinding;
 import moe.kotohana.randomfood.databinding.ListItemBinding;
+import moe.kotohana.randomfood.models.History;
 import moe.kotohana.randomfood.models.Items;
 import moe.kotohana.randomfood.models.Location;
 import moe.kotohana.randomfood.models.Place;
@@ -152,7 +156,7 @@ public class NearFoodActivity extends AppCompatActivity {
 
     private void initializeLayout(boolean isLoadedOnce) {
         if (!isLoadedOnce) {
-            adapter = new LastAdapter(arrayList, BR.content)
+            adapter = new LastAdapter(arrayList, moe.kotohana.randomfood.BR.content)
                     .map(Restaurant.class, new ItemType<ListItemBinding>(R.layout.list_item) {
                         @Override
                         public void onBind(Holder<ListItemBinding> holder) {
@@ -168,6 +172,7 @@ public class NearFoodActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
         progressDialog.dismiss();
+
     }
 
     public void finishWithFailure() {
@@ -181,6 +186,18 @@ public class NearFoodActivity extends AppCompatActivity {
         startActivity(new Intent(getApplicationContext(), NearFoodMapActivity.class)
                 .putExtra("restaurants", tempArr)
                 .putExtra("toolbar", getSupportActionBar().getTitle()));
+        Realm realm = Realm.getDefaultInstance();
+        realm.beginTransaction();
+        RealmResults<History> history = realm.where(History.class).findAll();
+        if (history.size() == 0) {
+            History data = realm.createObject(History.class);
+            RealmList<Restaurant> list = new RealmList<>();
+            list.add(arrayList.get(position).setRealType(type));
+            data.setHistoryList(list);
+        } else {
+            history.get(0).getHistoryList().add(arrayList.get(position).setRealType(type));
+        }
+        realm.commitTransaction();
     }
 
     @Override
