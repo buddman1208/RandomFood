@@ -50,13 +50,10 @@ public class NearFoodMapActivity extends AppCompatActivity {
     public NMapContext nMapContext;
     public NMapView mMapView;
     public NMapController mMapController;
-    public SharedPreferences mPreferences;
     public NMapOverlayManager mOverlayManager;
     public NMapMyLocationOverlay mMyLocationOverlay;
     public NMapLocationManager mMapLocationManager;
     public NMapCompassManager mMapCompassManager;
-    public NMapPOIdataOverlay mFloatingPOIdataOverlay;
-    public NMapPOIitem mFloatingPOIitem;
     private NMapViewerResourceProvider mMapViewerResourceProvider;
     ArrayList<? extends Restaurant> arrayList;
     public Intent intent;
@@ -200,12 +197,8 @@ public class NearFoodMapActivity extends AppCompatActivity {
         public NMapCalloutOverlay onCreateCalloutOverlay(NMapOverlay itemOverlay, NMapOverlayItem overlayItem,
                                                          Rect itemBounds) {
 
-            Log.e("asdf", "onCreateCalloutOverlay");
-            // handle overlapped items
             if (itemOverlay instanceof NMapPOIdataOverlay) {
                 NMapPOIdataOverlay poiDataOverlay = (NMapPOIdataOverlay) itemOverlay;
-
-                // check if it is selected by touch event
                 if (!poiDataOverlay.isFocusedBySelectItem()) {
                     int countOfOverlappedItems = 1;
 
@@ -217,8 +210,6 @@ public class NearFoodMapActivity extends AppCompatActivity {
                         if (poiItem == overlayItem) {
                             continue;
                         }
-
-                        // check if overlapped or not
                         if (Rect.intersects(poiItem.getBoundsInScreen(), overlayItem.getBoundsInScreen())) {
                             countOfOverlappedItems++;
                         }
@@ -243,54 +234,6 @@ public class NearFoodMapActivity extends AppCompatActivity {
 
     };
 
-    public void startMyLocation() {
-
-        if (mMyLocationOverlay != null) {
-            if (!mOverlayManager.hasOverlay(mMyLocationOverlay)) {
-                mOverlayManager.addOverlay(mMyLocationOverlay);
-            }
-
-            if (mMapLocationManager.isMyLocationEnabled()) {
-
-                if (!mMapView.isAutoRotateEnabled()) {
-                    mMyLocationOverlay.setCompassHeadingVisible(true);
-
-                    mMapCompassManager.enableCompass();
-
-                    mMapView.setAutoRotateEnabled(true, false);
-
-                } else {
-                    stopMyLocation();
-                }
-
-                mMapView.postInvalidate();
-            } else {
-                boolean isMyLocationEnabled = mMapLocationManager.enableMyLocation(true);
-                if (!isMyLocationEnabled) {
-                    Toast.makeText(getApplicationContext(), "Please enable a My Location source in system settings",
-                            Toast.LENGTH_LONG).show();
-
-                    Intent goToSettings = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(goToSettings);
-                }
-            }
-        }
-    }
-
-    public void stopMyLocation() {
-        if (mMyLocationOverlay != null) {
-            mMapLocationManager.disableMyLocation();
-
-            if (mMapView.isAutoRotateEnabled()) {
-                mMyLocationOverlay.setCompassHeadingVisible(false);
-
-                mMapCompassManager.disableCompass();
-
-                mMapView.setAutoRotateEnabled(false, false);
-
-            }
-        }
-    }
 
     @Override
     protected void onStart() {
@@ -306,8 +249,6 @@ public class NearFoodMapActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-
-        stopMyLocation();
         nMapContext.onStop();
         super.onStop();
     }
