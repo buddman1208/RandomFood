@@ -1,6 +1,7 @@
 package moe.kotohana.randomfood.utils
 
 import android.content.Intent
+import android.util.Log
 import java.util.Random
 
 /**
@@ -19,7 +20,8 @@ class MathHelper {
 
         fun calculatePercent(vararg items: Int): ArrayList<Float> {
             val array: ArrayList<Float> = ArrayList()
-            items.mapTo(array) { ((it.toFloat() / items.sum()) * 100)}
+            items.mapTo(array) { ((it.toFloat() / items.sum()) * 100) }
+            Log.e("asdf", array.sum().toString())
             return array
         }
     }

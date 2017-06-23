@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -89,27 +89,18 @@ public class UserSettingsActivity extends AppCompatActivity {
                         data.where().equalTo("type", 6).findAll().size()
                 );
                 Collections.addAll(arrayList,
-                        new ChartData("", percents.get(0), Color.WHITE, ContextCompat.getColor(this, R.color.koreanColor)),
-                        new ChartData("", percents.get(1), Color.WHITE, ContextCompat.getColor(this, R.color.chineseColor)),
-                        new ChartData("", percents.get(2), Color.WHITE, ContextCompat.getColor(this, R.color.boonsikColor)),
-                        new ChartData("", percents.get(3), Color.WHITE, ContextCompat.getColor(this, R.color.chickenColor)),
-                        new ChartData("", percents.get(4), Color.WHITE, ContextCompat.getColor(this, R.color.fastfoodColor)),
-                        new ChartData("", percents.get(5), Color.WHITE, ContextCompat.getColor(this, R.color.pizzaColor)),
-                        new ChartData("", percents.get(6), Color.WHITE, ContextCompat.getColor(this, R.color.japaneseColor))
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(0))), Color.WHITE,  ContextCompat.getColor(this, R.color.koreanColor)),
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(1))), Color.WHITE, ContextCompat.getColor(this, R.color.chineseColor)),
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(2))), Color.WHITE, ContextCompat.getColor(this, R.color.boonsikColor)),
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(3))), Color.WHITE, ContextCompat.getColor(this, R.color.chickenColor)),
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(4))), Color.WHITE, ContextCompat.getColor(this, R.color.fastfoodColor)),
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(5))), Color.WHITE, ContextCompat.getColor(this, R.color.pizzaColor)),
+                        new ChartData("", Float.parseFloat(String.format("%.2f", percents.get(6))), Color.WHITE, ContextCompat.getColor(this, R.color.japaneseColor))
                 );
                 binding.chart.setCenterCircleColor(Color.parseColor("#8fFFFFFF"));
                 binding.chart.setChartData(arrayList);
             }
         }
         realm.commitTransaction();
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }
