@@ -46,6 +46,9 @@ public class Restaurant extends RealmObject implements Serializable {
     public String getCategory() {
         return category;
     }
+    public String getRealDescription(){
+        return category + " " + getAddress();
+    }
 
     public void setCategory(String category) {
         this.category = category;
@@ -103,5 +106,9 @@ public class Restaurant extends RealmObject implements Serializable {
     public Restaurant setRealType(int type) {
         this.type = type;
         return this;
+    }
+
+    public int getType() {
+        return type;
     }
 }

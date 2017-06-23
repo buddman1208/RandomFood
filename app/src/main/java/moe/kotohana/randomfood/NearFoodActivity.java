@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,6 +30,7 @@ import moe.kotohana.randomfood.models.Location;
 import moe.kotohana.randomfood.models.Place;
 import moe.kotohana.randomfood.models.Restaurant;
 import moe.kotohana.randomfood.utils.GPSService;
+import moe.kotohana.randomfood.utils.MathHelper;
 import moe.kotohana.randomfood.utils.NetworkHelper;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -172,13 +174,19 @@ public class NearFoodActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         }
         progressDialog.dismiss();
-
+        (findViewById(R.id.random)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onListClick(MathHelper.Companion.getRandomNumber(arrayList.size()));
+            }
+        });
     }
 
     public void finishWithFailure() {
         Toast.makeText(this, "데이터 로드에 실패하였습니다.\n인터넷 연결 상태를 확인 후 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
         finish();
     }
+
 
     public void onListClick(int position) {
         ArrayList<Restaurant> tempArr = new ArrayList<>();

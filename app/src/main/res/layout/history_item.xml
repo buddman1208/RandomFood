@@ -1,0 +1,40 @@
+<layout>
+
+    <data>
+
+        <variable
+            name="activity"
+            type="moe.kotohana.randomfood.HistoryItemActivity" />
+
+        <variable
+            name="content"
+            type="moe.kotohana.randomfood.models.RestaurantContent" />
+
+        <variable
+            name="position"
+            type="Integer" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:onClick="@{() -> activity.onListClick(position)}"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{content.title}"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:text="@{content.description}"
+            android:textSize="14sp" />
+    </LinearLayout>
+</layout>
