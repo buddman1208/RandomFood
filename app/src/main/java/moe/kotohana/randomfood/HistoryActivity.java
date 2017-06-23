@@ -25,7 +25,7 @@ public class HistoryActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setTitleTextColor(Color.WHITE);
         getSupportActionBar().setTitle("최근 기록 보기");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         String[] strings = new String[]{
                 "전체",
                 "한식",

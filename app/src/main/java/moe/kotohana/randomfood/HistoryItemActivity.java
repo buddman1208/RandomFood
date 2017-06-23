@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.github.nitrico.lastadapter.Holder;
 import com.github.nitrico.lastadapter.ItemType;
@@ -56,6 +57,10 @@ public class HistoryItemActivity extends AppCompatActivity {
             arrayListForListView.add(new RestaurantContent().convertToThis(r));
         }
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (arrayListForListView.size() == 0) {
+            Toast.makeText(this, "아직 이 분류에서 먹은적이 없습니다!", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         new LastAdapter(arrayListForListView, BR.content)
                 .map(RestaurantContent.class, new ItemType<HistoryItemBinding>(R.layout.history_item) {
 

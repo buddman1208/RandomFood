@@ -468,7 +468,8 @@
                     android:text="직접 선택해서 고르기"
                     android:textColor="@color/textColor"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
             </LinearLayout>
         </RelativeLayout>
 
